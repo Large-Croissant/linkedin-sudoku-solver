@@ -1,3 +1,5 @@
+import pyautogui as pag
+
 NUMS = list("123456")
 
 def valid(check: list):
@@ -61,19 +63,6 @@ def solve(board: list, r: int = 0, c: int = 0):
             board[r][c] = '0'
     return None
 
-def type_solution(solved: list):
-    import pyautogui
-    input("Press ENTER to fill solution in 2 seconds (select top left box) ")
-    pyautogui.sleep(2)
-    for r, row in enumerate(solved):
-        for c, ch in enumerate(row):
-            pyautogui.press(ch)
-            if c < 5:
-                pyautogui.press('right')
-            elif r < 5:
-                pyautogui.press('down')
-                pyautogui.press('left', presses=5)
-
 def main():
     board = []
     for _ in range(6):
@@ -94,8 +83,16 @@ def main():
         for row in solved:
             print(''.join(row))
 
-        if input("Fill in the board automatically? (y/n): ").strip().lower().startswith("y"):
-            type_solution(solved)
+        input("Press ENTER to fill solution in 2 seconds (select top left box) ")
+        pag.sleep(2)
+        for r, row in enumerate(solved):
+            for c, ch in enumerate(row):
+                pag.press(ch)
+                if c < 5:
+                    pag.press('right')
+                elif r < 5:
+                    pag.press('down')
+                    pag.press('left', presses=5)
 
 if __name__ == "__main__":
     main()
