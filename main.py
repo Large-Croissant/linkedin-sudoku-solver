@@ -77,22 +77,25 @@ def main():
     solved = solve(board)
     if solved is None:
         print("No solution exists")
-    else:
-        if not is_solved(solved):
-            raise AssertionError("Solver produced an invalid board")
-        for row in solved:
-            print(''.join(row))
+        return
+    if not is_solved(solved):
+        raise AssertionError("Solver produced an invalid board")
 
-        input("Press ENTER to fill solution in 2 seconds (select top left box) ")
-        pag.sleep(2)
-        for r, row in enumerate(solved):
-            for c, ch in enumerate(row):
-                pag.press(ch)
-                if c < 5:
-                    pag.press('right')
-                elif r < 5:
-                    pag.press('down')
-                    pag.press('left', presses=5)
+    print("Solved board:")
+    for row in solved:
+        print(''.join(row))
+
+    print()
+    input("Press ENTER to fill solution in 2 seconds (select top left box) ")
+    pag.sleep(2)
+    for r, row in enumerate(solved):
+        for c, ch in enumerate(row):
+            pag.press(ch)
+            if c < 5:
+                pag.press('right')
+            elif r < 5:
+                pag.press('down')
+                pag.press('left', presses=5)
 
 if __name__ == "__main__":
     main()
