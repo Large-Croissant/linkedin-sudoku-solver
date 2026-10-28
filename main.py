@@ -51,7 +51,7 @@ def solve(board: list, r: int = 0, c: int = 0):
         return board
     nr, nc = (r, c + 1) if c < 5 else (r + 1, 0)
 
-    if board[r][c] != '0':
+    if board[r][c] != "0":
         return solve(board, nr, nc)
 
     for ch in NUMS:
@@ -60,7 +60,7 @@ def solve(board: list, r: int = 0, c: int = 0):
             result = solve(board, nr, nc)
             if result is not None:
                 return result
-            board[r][c] = '0'
+            board[r][c] = "0"
     return None
 
 def main():
@@ -83,7 +83,7 @@ def main():
 
     print("Solved board:")
     for row in solved:
-        print(''.join(row))
+        print("".join(row))
 
     print()
     input("Press ENTER to fill solution in 2 seconds (select top left box) ")
@@ -92,10 +92,10 @@ def main():
         for c, ch in enumerate(row):
             pag.press(ch)
             if c < 5:
-                pag.press('right')
+                pag.press("right")
             elif r < 5:
-                pag.press('down')
-                pag.press('left', presses=5)
+                pag.press("down")
+                pag.press("left", presses=5)
 
 if __name__ == "__main__":
     main()
