@@ -483,8 +483,12 @@ def main():
         print("".join(row))
 
     print()
-    input("Press ENTER to fill solution in 4 seconds (click the top-left cell) ")
-    pag.sleep(4)
+    FILL_DELAY_SECONDS = 5
+    input(f"Press ENTER to fill solution in {FILL_DELAY_SECONDS} seconds (click the top-left cell) ")
+    for i in range(FILL_DELAY_SECONDS):
+        print(f"Filling in {FILL_DELAY_SECONDS-i} seconds...")
+        pag.sleep(1)
+    print("\rFilling now...")
     for r, row in enumerate(solved):
         for c, ch in enumerate(row):
             pag.press(ch)
