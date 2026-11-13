@@ -402,7 +402,7 @@ def _solve_manual():
     if solved is None:
         print("No solution exists")
         return None
-    return board, solved
+    return board, solved, None
 
 
 def auto_mode():
@@ -469,7 +469,43 @@ def auto_mode():
                 print("Please edit the board or recapture.")
                 uncertain = []
                 continue
-            return board, solved
+            return board, solved, region
+
+
+def fill_board(solved: list, region):
+    """Fill the on-screen board, clicking the first cell when its location is known."""
+    FILL_DELAY_SECONDS = 5
+
+    def countdown():
+        for i in range(FILL_DELAY_SECONDS):
+            print(f"Filling in {FILL_DELAY_SECONDS - i} seconds...")
+            pag.sleep(1)
+        print("\rFilling now...")
+
+    if region is None:
+        input(f"Press ENTER to fill solution in {FILL_DELAY_SECONDS} seconds (click the top-left cell) ")
+        countdown()
+    elif input("[Enter] auto-click the first cell and fill   [m] click the first cell yourself   [q] cancel: ").strip().lower() != "m":
+        left, top, right, bottom = region
+        cell_w = (right - left + 1) / GRID_SIZE
+        cell_h = (bottom - top + 1) / GRID_SIZE
+        center_x = left + cell_w / 2
+        center_y = top + cell_h / 2
+        print(f"Auto-clicking first cell at ({center_x:.0f}, {center_y:.0f})...")
+        pag.click(center_x, center_y)
+        pag.sleep(0.5)
+    else:
+        input(f"Click the top-left cell yourself, then press ENTER to fill in {FILL_DELAY_SECONDS} seconds ")
+        countdown()
+
+    for r, row in enumerate(solved):
+        for c, ch in enumerate(row):
+            pag.press(ch)
+            if c < 5:
+                pag.press("right")
+            elif r < 5:
+                pag.press("down")
+                pag.press("left", presses=5)
 
 
 def main():
@@ -486,7 +522,7 @@ def main():
     if result is None:
         return
 
-    _board, solved = result
+    _board, solved, region = result
 
     if not is_solved(solved):
         raise AssertionError("Solver produced an invalid board")
@@ -496,20 +532,7 @@ def main():
         print("".join(row))
 
     print()
-    FILL_DELAY_SECONDS = 5
-    input(f"Press ENTER to fill solution in {FILL_DELAY_SECONDS} seconds (click the top-left cell) ")
-    for i in range(FILL_DELAY_SECONDS):
-        print(f"Filling in {FILL_DELAY_SECONDS-i} seconds...")
-        pag.sleep(1)
-    print("\rFilling now...")
-    for r, row in enumerate(solved):
-        for c, ch in enumerate(row):
-            pag.press(ch)
-            if c < 5:
-                pag.press("right")
-            elif r < 5:
-                pag.press("down")
-                pag.press("left", presses=5)
+    fill_board(solved, region)
 
 if __name__ == "__main__":
     main()
