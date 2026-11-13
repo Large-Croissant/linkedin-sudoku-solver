@@ -2,6 +2,19 @@ import ctypes
 import sys
 import time
 
+if sys.platform == "win32":
+    # Per-monitor DPI awareness. Windows scales mouse coordinates for
+    # DPI-unaware processes on the primary monitor's DPI, so on mixed-DPI
+    # multi-monitor setups pag.position() stops matching the physical pixels
+    # ImageGrab captures and auto-detect breaks on the other monitor.
+    try:
+        ctypes.windll.shcore.SetProcessDpiAwareness(2)
+    except (AttributeError, OSError):
+        try:
+            ctypes.windll.user32.SetProcessDPIAware()
+        except Exception:
+            pass
+
 import pyautogui as pag
 
 try:
